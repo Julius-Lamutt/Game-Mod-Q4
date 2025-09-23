@@ -8758,7 +8758,7 @@ void idPlayer::AdjustSpeed( void ) {
 		speed *= 0.33f;
 	}
 
-	physicsObj.SetSpeed( speed, pm_crouchspeed.GetFloat() );
+	physicsObj.SetSpeed( 4*speed, pm_crouchspeed.GetFloat() );
 }
 
 /*
