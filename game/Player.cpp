@@ -4279,10 +4279,6 @@ Superpowers
 ===============
 */
 
-bool idPlayer::ActivateSuperspeed( void ) {
-	return true;
-}
-
 float idPlayer::Superspeed ( bool active ) {
 	if (active) {
 		return 1.6f;
@@ -8572,7 +8568,7 @@ void idPlayer::PerformImpulse( int impulse ) {
    		}
 
 		case IMPULSE_23: {
-			
+			superspeedIsActive = true;
 			break;
 		}
 				
@@ -8778,7 +8774,7 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	speed *= PowerUpModifier(PMOD_SPEED);
-	speed *= Superspeed(ActivateSuperspeed());
+	speed *= Superspeed(superspeedIsActive);
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
 		speed *= 0.33f;

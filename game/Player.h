@@ -275,6 +275,9 @@ public:
 class idPlayer : public idActor {
 public:
 
+	// superpower activators
+	bool superspeedIsActive = false;
+
  	enum {
  		EVENT_IMPULSE = idEntity::EVENT_MAXEVENTS,
  		EVENT_EXIT_TELEPORTER,
@@ -551,7 +554,6 @@ public:
 	void					StartBossBattle				( idEntity* ent );
 
 	// Superpowers
-	bool					ActivateSuperspeed			( void );
 	float					Superspeed					( bool active );
 
 	// Powerups
