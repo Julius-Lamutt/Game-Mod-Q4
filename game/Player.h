@@ -117,6 +117,11 @@ typedef struct {
  	idVec3	pos;
 } aasLocation_t;
 
+//superpowers
+enum {
+	SUPERPOWER_SPEED = 0,
+};
+
 // powerups
 enum {
 	// standard powerups
@@ -544,6 +549,10 @@ public:
 	void					DiscoverSecretArea			( const char *description);
 	
 	void					StartBossBattle				( idEntity* ent );
+
+	// Superpowers
+	bool					ActivateSuperspeed			( void );
+	float					Superspeed					( bool active );
 
 	// Powerups
 	bool					GivePowerUp					( int powerup, int time, bool team = false );

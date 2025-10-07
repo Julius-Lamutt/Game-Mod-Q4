@@ -4275,6 +4275,25 @@ bool idPlayer::GiveItem( idItem *item ) {
 
 /*
 ===============
+Superpowers
+===============
+*/
+
+bool idPlayer::ActivateSuperspeed( void ) {
+	return true;
+}
+
+float idPlayer::Superspeed ( bool active ) {
+	if (active) {
+		return 1.6f;
+	}
+	else {
+		return 1.0f;
+	}
+}
+
+/*
+===============
 idPlayer::PowerUpModifier
 ===============
 */
@@ -4301,7 +4320,7 @@ float idPlayer::PowerUpModifier( int type ) {
 	if ( PowerUpActive( POWERUP_HASTE ) ) {
 		switch ( type ) {
 			case PMOD_SPEED:	
-				mod *= 1.3f;
+				mod *= 1.3f; //was 1.3f
 				break;
 
 			case PMOD_FIRERATE:
@@ -8517,6 +8536,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 				ToggleMap();
 			}
 */
+
 			break;
 		}
 		case IMPULSE_20: {
@@ -8550,6 +8570,11 @@ void idPlayer::PerformImpulse( int impulse ) {
    			}
    			break;
    		}
+
+		case IMPULSE_23: {
+			
+			break;
+		}
 				
 		case IMPULSE_28: {
  			if ( gameLocal.isClient || entityNumber == gameLocal.localClientNum ) {
@@ -8753,6 +8778,7 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	speed *= PowerUpModifier(PMOD_SPEED);
+	speed *= Superspeed(ActivateSuperspeed());
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
 		speed *= 0.33f;
