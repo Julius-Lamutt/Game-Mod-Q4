@@ -275,8 +275,12 @@ public:
 class idPlayer : public idActor {
 public:
 
-	// superpower activators
-	bool superspeedIsActive = false;
+	// superpower activators/deactivators
+	bool superSpeedIsActive = false;
+	bool superSpeedIsExhausted = false;
+	int superSpeedStartTime = 0;
+	const int superSpeedEndTime = 5000;
+	const int superSpeedCooldown = 20000;
 
  	enum {
  		EVENT_IMPULSE = idEntity::EVENT_MAXEVENTS,
@@ -554,7 +558,10 @@ public:
 	void					StartBossBattle				( idEntity* ent );
 
 	// Superpowers
-	float					Superspeed					( bool active );
+	void					ActivateSuperSpeed          ( void );
+	void					DeactivateSuperSpeed        ( void );
+	void                    SuperSpeedEndCooldown       ( void );
+	float					SuperSpeed					( bool active );
 
 	// Powerups
 	bool					GivePowerUp					( int powerup, int time, bool team = false );

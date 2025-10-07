@@ -4279,7 +4279,24 @@ Superpowers
 ===============
 */
 
-float idPlayer::Superspeed ( bool active ) {
+void idPlayer::ActivateSuperSpeed( void ) {
+	superSpeedStartTime = gameLocal.time;
+	superSpeedIsActive = true;
+}
+
+void idPlayer::DeactivateSuperSpeed( void ) {
+	if (gameLocal.time - superSpeedStartTime > superSpeedEndTime) {
+		superSpeedIsActive = false;
+	}
+}
+
+void idPlayer::SuperSpeedEndCooldown( void ) {
+	if (gameLocal.time - superSpeedStartTime > superSpeedCooldown) {
+		superSpeedIsExhausted = false;
+	}
+}
+
+float idPlayer::SuperSpeed ( bool active ) {
 	if (active) {
 		return 1.6f;
 	}
@@ -8568,7 +8585,11 @@ void idPlayer::PerformImpulse( int impulse ) {
    		}
 
 		case IMPULSE_23: {
-			superspeedIsActive = true;
+			SuperSpeedEndCooldown();
+			if ( !superSpeedIsExhausted ) {
+				ActivateSuperSpeed();
+				superSpeedIsExhausted = true;
+			}
 			break;
 		}
 				
@@ -8773,8 +8794,9 @@ void idPlayer::AdjustSpeed( void ) {
 		bobFrac = 0.0f;
 	}
 
+	DeactivateSuperSpeed();
 	speed *= PowerUpModifier(PMOD_SPEED);
-	speed *= Superspeed(superspeedIsActive);
+	speed *= SuperSpeed(superSpeedIsActive);
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
 		speed *= 0.33f;
