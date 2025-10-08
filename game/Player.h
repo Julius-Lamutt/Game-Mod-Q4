@@ -279,8 +279,14 @@ public:
 	bool superSpeedIsActive = false;
 	bool superSpeedIsExhausted = false;
 	int superSpeedStartTime = 0;
-	const int superSpeedEndTime = 5000;
-	const int superSpeedCooldown = 20000;
+	const int superSpeedEndTime = 3500;
+	const int superSpeedCooldown = 18500;
+
+	bool invisibilityIsActive = false;
+	bool invisibilityIsExhausted = false;
+	int invisibilityStartTime = 0;
+	const int invisibilityEndTime = 6000;
+	const int invisibilityCooldown = 31000;
 
  	enum {
  		EVENT_IMPULSE = idEntity::EVENT_MAXEVENTS,
@@ -562,6 +568,10 @@ public:
 	void					DeactivateSuperSpeed        ( void );
 	void                    SuperSpeedEndCooldown       ( void );
 	float					SuperSpeed					( bool active );
+
+	void					ActivateInvisibility        ( void );
+	void					DeactivateInvisibility      ( void );
+	void                    InvisibilityEndCooldown     ( void );
 
 	// Powerups
 	bool					GivePowerUp					( int powerup, int time, bool team = false );

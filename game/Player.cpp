@@ -4305,6 +4305,25 @@ float idPlayer::SuperSpeed ( bool active ) {
 	}
 }
 
+void idPlayer::ActivateInvisibility(void) {
+	invisibilityStartTime = gameLocal.time;
+	Event_DisableTarget();
+	invisibilityIsActive = true;
+}
+
+void idPlayer::DeactivateInvisibility(void) {
+	if (gameLocal.time - invisibilityStartTime > invisibilityEndTime) {
+		Event_EnableTarget();
+		invisibilityIsActive = false;
+	}
+}
+
+void idPlayer::InvisibilityEndCooldown(void) {
+	if (gameLocal.time - invisibilityStartTime > invisibilityCooldown) {
+		invisibilityIsExhausted = false;
+	}
+}
+
 /*
 ===============
 idPlayer::PowerUpModifier
@@ -8592,6 +8611,15 @@ void idPlayer::PerformImpulse( int impulse ) {
 			}
 			break;
 		}
+
+		case IMPULSE_24: {
+			InvisibilityEndCooldown();
+			if ( !invisibilityIsExhausted ) {
+				ActivateInvisibility();
+				invisibilityIsExhausted = true;
+			}
+			break;
+		}
 				
 		case IMPULSE_28: {
  			if ( gameLocal.isClient || entityNumber == gameLocal.localClientNum ) {
@@ -8795,6 +8823,8 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	DeactivateSuperSpeed();
+	DeactivateInvisibility();
+
 	speed *= PowerUpModifier(PMOD_SPEED);
 	speed *= SuperSpeed(superSpeedIsActive);
 
