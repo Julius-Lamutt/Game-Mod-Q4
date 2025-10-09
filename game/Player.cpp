@@ -4339,9 +4339,6 @@ void idPlayer::InvisibilityEndCooldown(void) {
 }
 
 void idPlayer::ActivateTeleportation( void ) {
-	teleportationStartTime = gameLocal.time;
-	playerView.Flash( colorCyan, 300 );
-
 	idVec3		origin;
 	idAngles	angles;
 	idPlayer*   player;
@@ -4356,8 +4353,12 @@ void idPlayer::ActivateTeleportation( void ) {
 
 	if (!ent) {
 		gameLocal.Printf("entity not found\n");
+		teleportationIsExhausted = false;
 		return;
 	}
+
+	teleportationStartTime = gameLocal.time;
+	playerView.Flash( colorCyan, 300 );
 
 	origin = ent->GetPhysics()->GetOrigin() - idVec3(5.0f, 0, 0);
 	angles = player->GetPhysics()->GetAxis().ToAngles();
