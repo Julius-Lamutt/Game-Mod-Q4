@@ -270,7 +270,10 @@ public:
 class idPlayer : public idActor {
 public:
 
-	// superpower activators/deactivators
+	// superpower activators/deactivators/cooldowns
+
+	bool superPowerIsActive = false;
+
 	bool superSpeedIsActive = false;
 	bool superSpeedIsExhausted = false;
 	int superSpeedStartTime = 0;

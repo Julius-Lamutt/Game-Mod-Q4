@@ -4282,11 +4282,13 @@ Superpowers
 void idPlayer::ActivateSuperSpeed( void ) {
 	superSpeedStartTime = gameLocal.time;
 	playerView.Flash( colorYellow, 400 );
+	superPowerIsActive = true;
 	superSpeedIsActive = true;
 }
 
 void idPlayer::DeactivateSuperSpeed( void ) {
-	if (gameLocal.time - superSpeedStartTime > superSpeedEndTime) {
+	if (gameLocal.time - superSpeedStartTime > superSpeedEndTime && superSpeedIsActive) {
+		superPowerIsActive = false;
 		superSpeedIsActive = false;
 	}
 }
@@ -4316,12 +4318,14 @@ void idPlayer::ActivateInvisibility(void) {
 	invisibilityStartTime = gameLocal.time;
 	Event_DisableTarget();
 	playerView.Flash( colorPurple, 400);
+	superPowerIsActive = true;
 	invisibilityIsActive = true;
 }
 
 void idPlayer::DeactivateInvisibility(void) {
-	if (gameLocal.time - invisibilityStartTime > invisibilityEndTime) {
+	if (gameLocal.time - invisibilityStartTime > invisibilityEndTime && invisibilityIsActive) {
 		Event_EnableTarget();
+		superPowerIsActive = false;
 		invisibilityIsActive = false;
 	}
 }
@@ -4376,12 +4380,14 @@ void idPlayer::ActivateInvincibility( void ) {
 	invincibilityStartTime = gameLocal.time;
 	playerView.Flash( colorRed, 400 );
 	godmode = true;
+	superPowerIsActive = true;
 	invincibilityIsActive = true;
 }
 
 void idPlayer::DeactivateInvincibility( void ) {
-	if (gameLocal.time - invincibilityStartTime > invincibilityEndTime) {
+	if (gameLocal.time - invincibilityStartTime > invincibilityEndTime && invincibilityIsActive) {
 		godmode = false;
+		superPowerIsActive = false;
 		invincibilityIsActive = false;
 	}
 }
@@ -8679,7 +8685,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 
 		case IMPULSE_23: {
 			SuperSpeedEndCooldown();
-			if ( !superSpeedIsExhausted ) {
+			if ( !superSpeedIsExhausted && !superPowerIsActive ) {
 				ActivateSuperSpeed();
 				superSpeedIsExhausted = true;
 			}
@@ -8688,7 +8694,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 
 		case IMPULSE_24: {
 			InvisibilityEndCooldown();
-			if ( !invisibilityIsExhausted ) {
+			if ( !invisibilityIsExhausted && !superPowerIsActive ) {
 				ActivateInvisibility();
 				invisibilityIsExhausted = true;
 			}
@@ -8697,7 +8703,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 
 		case IMPULSE_25: {
 			TeleportationEndCooldown();
-			if ( !teleportationIsExhausted ) {
+			if ( !teleportationIsExhausted && !superPowerIsActive ) {
 				ActivateTeleportation();
 				teleportationIsExhausted = true;
 			}
@@ -8706,7 +8712,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 
 		case IMPULSE_26: {
 			InvincibilityEndCooldown();
-			if ( !invincibilityIsExhausted ) {
+			if ( !invincibilityIsExhausted && !superPowerIsActive ) {
 				ActivateInvincibility();
 				invincibilityIsExhausted = true;
 			}
