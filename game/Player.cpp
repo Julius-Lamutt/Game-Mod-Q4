@@ -4372,20 +4372,27 @@ void idPlayer::TeleportationEndCooldown( void ) {
 	}
 }
 
-void idPlayer::ActivateInvincibility(void) {
+void idPlayer::ActivateInvincibility( void ) {
 	invincibilityStartTime = gameLocal.time;
-	disablePain = true;
+	playerView.Flash( colorRed, 400 );
+	godmode = true;
 	invincibilityIsActive = true;
 }
 
-void idPlayer::DeactivateInvincibility(void) {
+void idPlayer::DeactivateInvincibility( void ) {
 	if (gameLocal.time - invincibilityStartTime > invincibilityEndTime) {
-		disablePain = false;
+		godmode = false;
 		invincibilityIsActive = false;
 	}
 }
 
-void idPlayer::InvincibilityEndCooldown(void) {
+void idPlayer::InvincibilityWarning( void ) {
+	if (gameLocal.time - invincibilityStartTime == invincibilityEndTime - 800) {
+		playerView.Flash( colorRed, 400 );
+	}
+}
+
+void idPlayer::InvincibilityEndCooldown( void ) {
 	if (gameLocal.time - invincibilityStartTime > invincibilityCooldown) {
 		invincibilityIsExhausted = false;
 	}
@@ -8911,14 +8918,15 @@ void idPlayer::AdjustSpeed( void ) {
 		bobFrac = 0.0f;
 	}
 
-	DeactivateSuperSpeed();
 	SuperSpeedWarning();
-	DeactivateInvisibility();
 	InvisibilityWarning();
+	InvincibilityWarning();
+	DeactivateSuperSpeed();
+	DeactivateInvisibility();
 	DeactivateInvincibility();
 
-	speed *= PowerUpModifier(PMOD_SPEED);
-	speed *= SuperSpeed(superSpeedIsActive);
+	speed *= PowerUpModifier( PMOD_SPEED );
+	speed *= SuperSpeed( superSpeedIsActive );
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
 		speed *= 0.33f;
@@ -13445,7 +13453,6 @@ bool idPlayer::CanDamage( const idVec3 &origin, idVec3 &damagePoint, idEntity *i
 	if( gameLocal.isMultiplayer && health <= 0 ) {
 		return false;
 	}
-
 	return idActor::CanDamage( origin, damagePoint, ignoreEnt );
 }
 
@@ -13907,8 +13914,8 @@ void idPlayer::Event_DamageEffect( const char *damageDefName, idEntity* _damageF
 	{
 		idVec3 dir = (_damageFromEnt!=NULL)?(GetEyePosition()-_damageFromEnt->GetEyePosition()):viewAxis[2];
 		dir.Normalize();
-		int		damage = 1;
-		ClientDamageEffects( damageDef->dict, dir, damage );
+		int	damage = 1;
+		ClientDamageEffects( damageDef->dict, dir, damage*0 );
 		if ( !g_testDeath.GetBool() ) {
 			lastDmgTime = gameLocal.time;
 		}

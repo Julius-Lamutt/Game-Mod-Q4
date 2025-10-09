@@ -275,7 +275,7 @@ public:
 	bool superSpeedIsExhausted = false;
 	int superSpeedStartTime = 0;
 	const int superSpeedEndTime = 4000;
-	const int superSpeedCooldown = 18500;
+	const int superSpeedCooldown = 19000;
 
 	bool invisibilityIsActive = false;
 	bool invisibilityIsExhausted = false;
@@ -290,8 +290,8 @@ public:
 	bool invincibilityIsActive = false;
 	bool invincibilityIsExhausted = false;
 	int invincibilityStartTime = 0;
-	const int invincibilityEndTime = 29000;
-	const int invincibilityCooldown = 29000;
+	const int invincibilityEndTime = 6000;
+	const int invincibilityCooldown = 31000;
 
  	enum {
  		EVENT_IMPULSE = idEntity::EVENT_MAXEVENTS,
