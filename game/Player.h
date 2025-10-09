@@ -285,7 +285,7 @@ public:
 
 	bool teleportationIsExhausted = false;
 	int teleportationStartTime = 0;
-	const int teleportationCooldown = 100;
+	const int teleportationCooldown = 10000;
 
 	bool invincibilityIsActive = false;
 	bool invincibilityIsExhausted = false;

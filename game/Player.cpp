@@ -4339,23 +4339,28 @@ void idPlayer::InvisibilityEndCooldown(void) {
 }
 
 void idPlayer::ActivateTeleportation( void ) {
+	teleportationStartTime = gameLocal.time;
+	playerView.Flash( colorCyan, 300 );
+
 	idVec3		origin;
 	idAngles	angles;
-	idPlayer*	player;
-	idEntity*	ent;
+	idPlayer*   player;
+	idEntity*   ent;
 
 	player = gameLocal.GetLocalPlayer();
-	if ( !player ) {
+	if (!player) {
 		return;
 	}
 
-	origin = player->GetPhysics()->GetOrigin();
+	ent = ClosestEnemyToPoint( player->GetPhysics()->GetOrigin(), 1000.0f );
 
-	ent = ClosestEnemyToPoint( origin, 10000, false, false );
+	if (!ent) {
+		gameLocal.Printf("entity not found\n");
+		return;
+	}
 
-	angles.Zero();
-	angles.yaw = ent->GetPhysics()->GetAxis()[0].ToYaw();
-	origin = ent->GetPhysics()->GetOrigin();
+	origin = ent->GetPhysics()->GetOrigin() - idVec3(5.0f, 0, 0);
+	angles = player->GetPhysics()->GetAxis().ToAngles();
 
 	player->Teleport(origin, angles, ent);
 }
@@ -8684,9 +8689,9 @@ void idPlayer::PerformImpulse( int impulse ) {
 
 		case IMPULSE_25: {
 			TeleportationEndCooldown();
-			if ( !invisibilityIsExhausted ) {
-				ActivateInvisibility();
-				invisibilityIsExhausted = true;
+			if ( !teleportationIsExhausted ) {
+				ActivateTeleportation();
+				teleportationIsExhausted = true;
 			}
 			break;
 		}
