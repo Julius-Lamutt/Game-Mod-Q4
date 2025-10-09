@@ -117,11 +117,6 @@ typedef struct {
  	idVec3	pos;
 } aasLocation_t;
 
-//superpowers
-enum {
-	SUPERPOWER_SPEED = 0,
-};
-
 // powerups
 enum {
 	// standard powerups
@@ -279,7 +274,7 @@ public:
 	bool superSpeedIsActive = false;
 	bool superSpeedIsExhausted = false;
 	int superSpeedStartTime = 0;
-	const int superSpeedEndTime = 3500;
+	const int superSpeedEndTime = 4000;
 	const int superSpeedCooldown = 18500;
 
 	bool invisibilityIsActive = false;
@@ -287,6 +282,16 @@ public:
 	int invisibilityStartTime = 0;
 	const int invisibilityEndTime = 6000;
 	const int invisibilityCooldown = 31000;
+
+	bool teleportationIsExhausted = false;
+	int teleportationStartTime = 0;
+	const int teleportationCooldown = 100;
+
+	bool invincibilityIsActive = false;
+	bool invincibilityIsExhausted = false;
+	int invincibilityStartTime = 0;
+	const int invincibilityEndTime = 29000;
+	const int invincibilityCooldown = 29000;
 
  	enum {
  		EVENT_IMPULSE = idEntity::EVENT_MAXEVENTS,
@@ -566,12 +571,22 @@ public:
 	// Superpowers
 	void					ActivateSuperSpeed          ( void );
 	void					DeactivateSuperSpeed        ( void );
+	void					SuperSpeedWarning           ( void );
 	void                    SuperSpeedEndCooldown       ( void );
 	float					SuperSpeed					( bool active );
 
 	void					ActivateInvisibility        ( void );
 	void					DeactivateInvisibility      ( void );
+	void 				    InvisibilityWarning			( void );
 	void                    InvisibilityEndCooldown     ( void );
+
+	void					ActivateTeleportation       ( void );
+	void                    TeleportationEndCooldown    ( void );
+
+	void					ActivateInvincibility		( void );
+	void					DeactivateInvincibility		( void );
+	void 				    InvincibilityWarning		( void );
+	void                    InvincibilityEndCooldown	( void );
 
 	// Powerups
 	bool					GivePowerUp					( int powerup, int time, bool team = false );

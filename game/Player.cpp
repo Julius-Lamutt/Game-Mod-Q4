@@ -4281,12 +4281,19 @@ Superpowers
 
 void idPlayer::ActivateSuperSpeed( void ) {
 	superSpeedStartTime = gameLocal.time;
+	playerView.Flash( colorYellow, 400 );
 	superSpeedIsActive = true;
 }
 
 void idPlayer::DeactivateSuperSpeed( void ) {
 	if (gameLocal.time - superSpeedStartTime > superSpeedEndTime) {
 		superSpeedIsActive = false;
+	}
+}
+
+void idPlayer::SuperSpeedWarning( void ) {
+	if (gameLocal.time - superSpeedStartTime == superSpeedEndTime - 800) {
+		playerView.Flash( colorYellow, 400 );
 	}
 }
 
@@ -4308,6 +4315,7 @@ float idPlayer::SuperSpeed ( bool active ) {
 void idPlayer::ActivateInvisibility(void) {
 	invisibilityStartTime = gameLocal.time;
 	Event_DisableTarget();
+	playerView.Flash( colorPurple, 400);
 	invisibilityIsActive = true;
 }
 
@@ -4318,9 +4326,62 @@ void idPlayer::DeactivateInvisibility(void) {
 	}
 }
 
+void idPlayer::InvisibilityWarning(void) {
+	if (gameLocal.time - invisibilityStartTime == invisibilityEndTime - 800) {
+		playerView.Flash( colorPurple, 400 );
+	}
+}
+
 void idPlayer::InvisibilityEndCooldown(void) {
 	if (gameLocal.time - invisibilityStartTime > invisibilityCooldown) {
 		invisibilityIsExhausted = false;
+	}
+}
+
+void idPlayer::ActivateTeleportation( void ) {
+	idVec3		origin;
+	idAngles	angles;
+	idPlayer*	player;
+	idEntity*	ent;
+
+	player = gameLocal.GetLocalPlayer();
+	if ( !player ) {
+		return;
+	}
+
+	origin = player->GetPhysics()->GetOrigin();
+
+	ent = ClosestEnemyToPoint( origin, 10000, false, false );
+
+	angles.Zero();
+	angles.yaw = ent->GetPhysics()->GetAxis()[0].ToYaw();
+	origin = ent->GetPhysics()->GetOrigin();
+
+	player->Teleport(origin, angles, ent);
+}
+
+void idPlayer::TeleportationEndCooldown( void ) {
+	if (gameLocal.time - teleportationStartTime > teleportationCooldown) {
+		teleportationIsExhausted = false;
+	}
+}
+
+void idPlayer::ActivateInvincibility(void) {
+	invincibilityStartTime = gameLocal.time;
+	disablePain = true;
+	invincibilityIsActive = true;
+}
+
+void idPlayer::DeactivateInvincibility(void) {
+	if (gameLocal.time - invincibilityStartTime > invincibilityEndTime) {
+		disablePain = false;
+		invincibilityIsActive = false;
+	}
+}
+
+void idPlayer::InvincibilityEndCooldown(void) {
+	if (gameLocal.time - invincibilityStartTime > invincibilityCooldown) {
+		invincibilityIsExhausted = false;
 	}
 }
 
@@ -8620,6 +8681,28 @@ void idPlayer::PerformImpulse( int impulse ) {
 			}
 			break;
 		}
+
+		case IMPULSE_25: {
+			TeleportationEndCooldown();
+			if ( !invisibilityIsExhausted ) {
+				ActivateInvisibility();
+				invisibilityIsExhausted = true;
+			}
+			break;
+		}
+
+		case IMPULSE_26: {
+			InvincibilityEndCooldown();
+			if ( !invincibilityIsExhausted ) {
+				ActivateInvincibility();
+				invincibilityIsExhausted = true;
+			}
+			break;
+		}
+
+		case IMPULSE_27: {
+			break;
+		}
 				
 		case IMPULSE_28: {
  			if ( gameLocal.isClient || entityNumber == gameLocal.localClientNum ) {
@@ -8823,7 +8906,10 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	DeactivateSuperSpeed();
+	SuperSpeedWarning();
 	DeactivateInvisibility();
+	InvisibilityWarning();
+	DeactivateInvincibility();
 
 	speed *= PowerUpModifier(PMOD_SPEED);
 	speed *= SuperSpeed(superSpeedIsActive);
