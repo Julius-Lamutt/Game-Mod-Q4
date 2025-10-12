@@ -461,7 +461,7 @@ public:
 	virtual const idDict *	GetUserInfo( int clientNum );
 	virtual bool			IsClientActive( int clientNum );
 	virtual void			SetServerInfo( const idDict &serverInfo );
-
+	
 	virtual const idDict *	RepeaterSetUserInfo( int clientNum, const idDict &userInfo ) { assert(false); return NULL; }
 
 	virtual const idDict &	GetPersistentPlayerInfo( int clientNum );

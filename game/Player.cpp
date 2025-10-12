@@ -4344,6 +4344,7 @@ void idPlayer::InvisibilityEndCooldown(void) {
 
 void idPlayer::ActivateTeleportation( void ) {
 	idVec3		origin;
+	idVec3		newOrigin;
 	idAngles	angles;
 	idPlayer*   player;
 	idEntity*   ent;
@@ -4362,12 +4363,24 @@ void idPlayer::ActivateTeleportation( void ) {
 	}
 
 	teleportationStartTime = gameLocal.time;
+	superPowerIsActive = true;
+	teleportationIsActive = true;
+	Event_DisableTarget();
 	playerView.Flash( colorCyan, 300 );
 
-	origin = ent->GetPhysics()->GetOrigin() - idVec3(5.0f, 0, 0);
-	angles = player->GetPhysics()->GetAxis().ToAngles();
+	origin = ent->GetPhysics()->GetOrigin();
+	angles = ent->GetPhysics()->GetAxis().ToAngles();
+	newOrigin = origin - idVec3(6.0f, 0, 0);
+	
+	player->Teleport(newOrigin, angles, ent);
+}
 
-	player->Teleport(origin, angles, ent);
+void idPlayer::DeactivateTeleportation(void) {
+	if (gameLocal.time - teleportationStartTime > teleportationEndTime && teleportationIsActive) {
+		Event_EnableTarget();
+		superPowerIsActive = false;
+		invisibilityIsActive = false;
+	}
 }
 
 void idPlayer::TeleportationEndCooldown( void ) {
@@ -4401,6 +4414,38 @@ void idPlayer::InvincibilityWarning( void ) {
 void idPlayer::InvincibilityEndCooldown( void ) {
 	if (gameLocal.time - invincibilityStartTime > invincibilityCooldown) {
 		invincibilityIsExhausted = false;
+	}
+}
+
+void idPlayer::ActivateDoppleganger( void ) {
+	idPlayer* player = gameLocal.GetLocalPlayer();
+	idEntity* ent = ClosestEnemyToPoint(player->GetPhysics()->GetOrigin(), 1000.0f);
+
+	if (!ent) {
+		gameLocal.Printf("entity not found\n");
+		dopplegangerIsExhausted = false;
+		return;
+	}
+
+	dopplegangerStartTime = gameLocal.time;
+	playerView.Flash(colorGreen, 300);
+	superPowerIsActive = true;
+	dopplegangerIsActive = true;
+
+	ent->health -= 1000;
+	player->health += 3;
+}
+
+void idPlayer::DeactivateDoppleganger( void ) {
+	if (gameLocal.time - dopplegangerStartTime > dopplegangerEndTime && dopplegangerIsActive) {
+		superPowerIsActive = false;
+		dopplegangerIsActive = false;
+	}
+}
+
+void idPlayer::DopplegangerEndCooldown( void ) {
+	if (gameLocal.time - dopplegangerStartTime > dopplegangerCooldown) {
+		dopplegangerIsExhausted = false;
 	}
 }
 
@@ -8720,6 +8765,11 @@ void idPlayer::PerformImpulse( int impulse ) {
 		}
 
 		case IMPULSE_27: {
+			DopplegangerEndCooldown();
+			if ( !dopplegangerIsExhausted && !superPowerIsActive ) {
+				ActivateDoppleganger();
+				dopplegangerIsExhausted = true;
+			}
 			break;
 		}
 				
@@ -8927,9 +8977,12 @@ void idPlayer::AdjustSpeed( void ) {
 	SuperSpeedWarning();
 	InvisibilityWarning();
 	InvincibilityWarning();
+
 	DeactivateSuperSpeed();
 	DeactivateInvisibility();
+	DeactivateTeleportation();
 	DeactivateInvincibility();
+	DeactivateDoppleganger();
 
 	speed *= PowerUpModifier( PMOD_SPEED );
 	speed *= SuperSpeed( superSpeedIsActive );

@@ -287,7 +287,9 @@ public:
 	const int invisibilityCooldown = 31000;
 
 	bool teleportationIsExhausted = false;
+	bool teleportationIsActive = false;
 	int teleportationStartTime = 0;
+	const int teleportationEndTime = 2000;
 	const int teleportationCooldown = 10000;
 
 	bool invincibilityIsActive = false;
@@ -295,6 +297,12 @@ public:
 	int invincibilityStartTime = 0;
 	const int invincibilityEndTime = 6000;
 	const int invincibilityCooldown = 31000;
+
+	bool dopplegangerIsActive = false;
+	bool dopplegangerIsExhausted = false;
+	int dopplegangerStartTime = 0;
+	const int dopplegangerEndTime = 0;
+	const int dopplegangerCooldown = 25000;
 
  	enum {
  		EVENT_IMPULSE = idEntity::EVENT_MAXEVENTS,
@@ -584,12 +592,17 @@ public:
 	void                    InvisibilityEndCooldown     ( void );
 
 	void					ActivateTeleportation       ( void );
+	void					DeactivateTeleportation		( void );
 	void                    TeleportationEndCooldown    ( void );
 
 	void					ActivateInvincibility		( void );
 	void					DeactivateInvincibility		( void );
 	void 				    InvincibilityWarning		( void );
 	void                    InvincibilityEndCooldown	( void );
+
+	void					ActivateDoppleganger		( void );
+	void					DeactivateDoppleganger		( void );
+	void                    DopplegangerEndCooldown		( void );
 
 	// Powerups
 	bool					GivePowerUp					( int powerup, int time, bool team = false );
