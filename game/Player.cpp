@@ -4379,7 +4379,7 @@ void idPlayer::DeactivateTeleportation(void) {
 	if (gameLocal.time - teleportationStartTime > teleportationEndTime && teleportationIsActive) {
 		Event_EnableTarget();
 		superPowerIsActive = false;
-		invisibilityIsActive = false;
+		teleportationIsActive = false;
 	}
 }
 
@@ -4432,8 +4432,8 @@ void idPlayer::ActivateDoppleganger( void ) {
 	superPowerIsActive = true;
 	dopplegangerIsActive = true;
 
-	ent->health -= 1000;
-	player->health += 3;
+	ent->health -= 10000;
+	player->health += 5;
 }
 
 void idPlayer::DeactivateDoppleganger( void ) {
