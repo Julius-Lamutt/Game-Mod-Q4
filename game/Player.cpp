@@ -20,7 +20,7 @@ M61 Vulcan			...			Napalm Gun			...			10 done
 Items:
 Flashlight
 Mine Detector
-Night-Vision Goggles
+Diazepam
 SOCOM Suppressor
 FAMAS Suppressor
 */
@@ -9656,7 +9656,7 @@ void idPlayer::Think( void ) {
 	// zooming
 	bool zoom = (usercmd.buttons & BUTTON_ZOOM) && CanZoom();
 	if ( zoom != zoomed ) {
-		if ( zoom ) {
+		if ( zoom && currentWeapon != 1 ) {
 			ProcessEvent ( &EV_Player_ZoomIn );
 		} else {
 			ProcessEvent ( &EV_Player_ZoomOut );

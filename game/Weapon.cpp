@@ -2345,6 +2345,9 @@ rvWeapon::TotalAmmoCount
 ================
 */
 int rvWeapon::TotalAmmoCount ( void ) const {
+	if (gameLocal.GetLocalPlayer()->currentWeapon == 2) {
+		return owner->inventory.HasAmmo(ammoType, 1) - 400;
+	}
 	return owner->inventory.HasAmmo( ammoType, 1 );
 }
 
