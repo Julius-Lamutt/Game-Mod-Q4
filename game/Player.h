@@ -855,6 +855,9 @@ public:
 	void					ResetCash();
 // RITUAL END
 
+	//Moved instances/functions
+	int						currentWeapon;
+
 protected:
 	void					SetupHead( const char* modelKeyName = "", idVec3 headOffset = idVec3(0, 0, 0) );
 
@@ -897,7 +900,7 @@ private:
 // squirrel: Mode-agnostic buymenus
 	int						carryOverCurrentWeapon;
 // RITUAL END
-	int						currentWeapon;
+	//int						currentWeapon;
 	int						idealWeapon;
 	int						previousWeapon;
 	int						weaponSwitchTime;

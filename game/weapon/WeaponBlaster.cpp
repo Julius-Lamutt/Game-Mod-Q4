@@ -3,6 +3,7 @@
 
 #include "../Game_local.h"
 #include "../Weapon.h"
+#include "../Player.h"
 
 #define BLASTER_SPARM_CHARGEGLOW		6
 
@@ -426,8 +427,8 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 
 
 	
-			if ( gameLocal.time - fireHeldTime > chargeTime ) {	
-				Attack ( false, 1, spread, 0, 1.0f );
+			if ( player->currentWeapon = 10) {	
+				Attack ( true, 1, spread, 0, 1.0f );
 				PlayEffect ( "fx_normalflash", barrelJointView, false );
 				PlayAnim( ANIMCHANNEL_ALL, "fire", parms.blendFrames );
 			} else {
