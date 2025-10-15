@@ -3,6 +3,28 @@
 //
 // MERGE_DATE 09/30/2004
 
+/*
+For reference:
+Weapons:
+SOCOM				...			Blaster
+FAMAS				...			Machine Gun
+PSG1				...			Shotgun
+Stinger				...			Hyperblaster
+C4					...			Grenade Launcher
+Claymore			...			Nail Gun
+Grenade				...			Rocket Launcher
+Stun Grenade		...			Railgun
+Chaff Grenade		...			Lightning Gun
+Single Action Army	...			Dark Matter Gun
+M61 Vulcan			...			Napalm Gun
+Items:
+Flashlight
+Mine Detector
+Night-Vision Goggles
+SOCOM Suppressor
+FAMAS Suppressor
+*/
+
 #include "../idlib/precompiled.h"
 #pragma hdrstop
 
