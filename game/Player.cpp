@@ -6,17 +6,17 @@
 /*
 For reference:
 Weapons:
-SOCOM				...			Blaster
-FAMAS				...			Machine Gun
-PSG1				...			Shotgun
-Stinger				...			Hyperblaster
-C4					...			Grenade Launcher
-Claymore			...			Nail Gun
-Grenade				...			Rocket Launcher
-Stun Grenade		...			Railgun
-Chaff Grenade		...			Lightning Gun
-Single Action Army	...			Dark Matter Gun
-M61 Vulcan			...			Napalm Gun
+SOCOM				...			Blaster				...			0 done
+FAMAS				...			Machine Gun			...         1 done
+PSG1				...			Shotgun				...			2 
+Stinger				...			Hyperblaster		...			3
+C4					...			Grenade Launcher	...			4
+Claymore			...			Nail Gun			...			5	
+Grenade				...			Rocket Launcher		...			6
+Stun Grenade		...			Railgun				...			7	
+Chaff Grenade		...			Lightning Gun		...			8	
+Single Action Army	...			Dark Matter Gun		...			9 done
+M61 Vulcan			...			Napalm Gun			...			10 done
 Items:
 Flashlight
 Mine Detector
