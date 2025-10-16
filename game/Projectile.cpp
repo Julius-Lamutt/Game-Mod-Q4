@@ -449,12 +449,18 @@ void idProjectile::Launch( const idVec3 &start, const idVec3 &dir, const idVec3 
 	physicsObj.SetOrigin( start );
 	physicsObj.SetAxis( dir.ToMat3() );
 
-	if ( !gameLocal.isClient ) {
+	idPlayer* player = gameLocal.GetLocalPlayer();
+	int num = player->currentWeapon;
+
+	if ( !gameLocal.isClient) {
 		if ( fuse <= 0 ) {
 			// run physics for 1 second
 			RunPhysics();
 			PostEventMS( &EV_Remove, spawnArgs.GetInt( "remove_time", "1500" ) );
 		} else if ( spawnArgs.GetBool( "detonate_on_fuse" ) ) {
+			if ((num == 4 && player->explodeC4 == false) || num == 5 || num == 7 || num == 8) {
+				fuse = 100.0f;
+			}
 			fuse -= timeSinceFire;
 			if ( fuse < 0.0f ) {
 				fuse = 0.0f;
@@ -532,13 +538,18 @@ void idProjectile::Think( void ) {
 		}
 		
 		RunPhysics();
-		
+		idPlayer* player;
+		player = gameLocal.GetLocalPlayer();
 		// If we werent at rest and are now then start the atrest fuse
 		if ( physicsObj.IsAtRest( ) ) {
 			float fuse = spawnArgs.GetFloat( "fuse_atrest" );
 			if ( fuse > 0.0f ) {
 				if ( spawnArgs.GetBool( "detonate_on_fuse" ) ) {
 					CancelEvents( &EV_Explode );
+					if (player->explodeC4) {
+						PostEventSec(&EV_Explode, 0.0f);
+						player->explodeC4 = false;
+					}
 					PostEventSec( &EV_Explode, fuse );
 				} else {
 					CancelEvents( &EV_Fizzle );
@@ -1663,7 +1674,6 @@ idGuidedProjectile::Think
 ================
 */
 void idGuidedProjectile::Think( void ) {
-
 	if ( state == LAUNCHED ) {
 		idVec3	dir;
 		idVec3	vel;

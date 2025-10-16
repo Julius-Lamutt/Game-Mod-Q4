@@ -270,6 +270,10 @@ public:
 class idPlayer : public idActor {
 public:
 
+	// weapon handling
+	bool explodeC4 = false;
+	bool homingOn = false;
+
 	// superpower activators/deactivators/cooldowns
 
 	bool superPowerIsActive = false;

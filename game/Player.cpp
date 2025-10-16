@@ -8,9 +8,9 @@ For reference:
 Weapons:
 SOCOM				...			Blaster				...			0 done
 FAMAS				...			Machine Gun			...         1 done
-PSG1				...			Shotgun				...			2 
+PSG1				...			Shotgun				...			2 done
 Stinger				...			Hyperblaster		...			3
-C4					...			Grenade Launcher	...			4
+C4					...			Grenade Launcher	...			4 
 Claymore			...			Nail Gun			...			5	
 Grenade				...			Rocket Launcher		...			6
 Stun Grenade		...			Railgun				...			7	
@@ -399,7 +399,9 @@ void idInventory::RestoreInventory( idPlayer *owner, const idDict &dict ) {
 		weaponMods[ i ] = dict.GetInt( va( "weapon_mods_%i", i ) );
 	}
 	// forcefully invalidate the weapon
-	owner->GiveWeaponMods( 0 );
+	if (gameLocal.GetLocalPlayer()->currentWeapon != 3) {
+		owner->GiveWeaponMods(0);
+	}
 
 	num = dict.GetInt( "levelTriggers" );
 	for ( i = 0; i < num; i++ ) {
@@ -8703,7 +8705,10 @@ void idPlayer::PerformImpulse( int impulse ) {
 			break;
 		}
 		case IMPULSE_19: {
-/*		
+			if (currentWeapon = 4) {
+				explodeC4 = true;
+			}
+/*			
 			// when we're not in single player, IMPULSE_19 is used for showScores
 			// otherwise it does IMPULSE_12 (PDA)
 			if ( !gameLocal.isMultiplayer ) {
@@ -8725,7 +8730,7 @@ void idPlayer::PerformImpulse( int impulse ) {
 			break;
 		}
 		case IMPULSE_21: {
-			if( gameLocal.isServer && gameLocal.gameType == GAME_TOURNEY ) {
+			if (gameLocal.GetLocalPlayer()->currentWeapon == 4) {
 				// only allow a client to join the waiting arena if they are not currently assigned to an arena
 
 				// removed waiting arena functionality for now
@@ -8994,6 +8999,11 @@ void idPlayer::AdjustSpeed( void ) {
 	} else {
 		speed = pm_walkspeed.GetFloat();
 		bobFrac = 0.0f;
+	}
+
+	if (gameLocal.GetLocalPlayer()->currentWeapon == 3 && homingOn == false) {
+		gameLocal.GetLocalPlayer()->GiveWeaponMods(3, 2);
+		homingOn = true;
 	}
 
 	SuperSpeedWarning();
@@ -9656,7 +9666,7 @@ void idPlayer::Think( void ) {
 	// zooming
 	bool zoom = (usercmd.buttons & BUTTON_ZOOM) && CanZoom();
 	if ( zoom != zoomed ) {
-		if ( zoom && currentWeapon != 1 ) {
+		if ( zoom && currentWeapon != 1 || currentWeapon == 3) {
 			ProcessEvent ( &EV_Player_ZoomIn );
 		} else {
 			ProcessEvent ( &EV_Player_ZoomOut );

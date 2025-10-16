@@ -20,6 +20,8 @@ class idProjectile : public idEntity {
 public :
 	CLASS_PROTOTYPE( idProjectile );
 
+	usercmd_t				usercmd;
+
 							idProjectile();
 	virtual					~idProjectile();
 
@@ -64,6 +66,9 @@ public :
 	virtual void			ReadFromSnapshot( const idBitMsgDelta &msg );
 
 	virtual bool			ClientStale( void );
+
+	//moved explosion events
+	void					Event_Explode(void);
 	
 protected:
 	void					SpawnImpactEntities(const trace_t& collision, const idVec3 projectileDirection);
@@ -132,7 +137,6 @@ protected:
 private:
 	void					DefaultDamageEffect	( const trace_t &collision, const idVec3 &velocity, const char *damageDefName );
 
-	void					Event_Explode			( void );
 	void					Event_Fizzle			( void );
 	void					Event_RadiusDamage		( idEntity *ignore );
 	void					Event_ResidualDamage	( idEntity *ignore );
