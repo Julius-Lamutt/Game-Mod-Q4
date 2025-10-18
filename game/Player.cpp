@@ -9,12 +9,12 @@ Weapons:
 SOCOM				...			Blaster				...			0 done
 FAMAS				...			Machine Gun			...         1 done
 PSG1				...			Shotgun				...			2 done
-Stinger				...			Hyperblaster		...			3
-C4					...			Grenade Launcher	...			4 
-Claymore			...			Nail Gun			...			5	
-Grenade				...			Rocket Launcher		...			6
-Stun Grenade		...			Railgun				...			7	
-Chaff Grenade		...			Lightning Gun		...			8	
+Stinger				...			Hyperblaster		...			3 done
+C4					...			Grenade Launcher	...			4 done
+Claymore			...			Nail Gun			...			5 
+Grenade				...			Rocket Launcher		...			6 done
+Stun Grenade		...			Railgun				...			7 done
+Chaff Grenade		...			Lightning Gun		...			8 done
 Single Action Army	...			Dark Matter Gun		...			9 done
 M61 Vulcan			...			Napalm Gun			...			10 done
 Items:
@@ -4295,6 +4295,80 @@ bool idPlayer::GiveItem( idItem *item ) {
 //RITUAL END
 
 	return gave;
+}
+
+/*
+===============
+Weapon Stuff 
+===============
+*/
+
+void idPlayer::ActivateC4(idEntity* c4) {
+	activateC4 = true;
+	newC4 = c4;
+}
+
+void idPlayer::ExplodeC4(idEntity* c4) {
+	if (explodeC4) {
+		c4->ProcessEvent(&EV_Explode);
+		c4->CancelEvents(&EV_Explode);
+		activateC4 = false;
+		explodeC4 = false;
+	}
+}
+
+void idPlayer::ActivateClaymore(idEntity* claymore) {
+	activateClaymore = true;
+	newClaymore = claymore;
+}
+
+void idPlayer::ExplodeClaymore(idEntity* claymore) {
+	idVec3		origin;
+	idEntity*	ent;
+
+	ent = ClosestEnemyToPoint(claymore->GetPhysics()->GetOrigin());
+	if (!ent) {
+		return;
+	}
+	if ((ent->GetPhysics()->GetOrigin() - claymore->GetPhysics()->GetOrigin()).Length() > 20.0f ) {
+		claymore->ProcessEvent(&EV_Explode);
+		claymore->CancelEvents(&EV_Explode);
+		activateClaymore = false;
+	}
+}
+
+void idPlayer::ActivateStunGrenade(void) {
+	if (!enemyStun) {
+		stunStartTime = gameLocal.time;
+		Event_DisableTarget();
+		playerView.Flash(colorWhite, 100);
+		enemyStun = true;
+	}
+	
+}
+
+void idPlayer::DeactivateStunGrenade(void) {
+	if (gameLocal.time - stunStartTime > stunDuration && enemyStun) {
+		Event_EnableTarget();
+		enemyStun = false;
+	}
+}
+
+void idPlayer::ActivateChaffGrenade(void) {
+	if (!enemyChaff) {
+		chaffStartTime = gameLocal.time;
+		Event_DisableTarget();
+		playerView.Flash(colorOrange, 100);
+		enemyChaff = true;
+	}
+
+}
+
+void idPlayer::DeactivateChaffGrenade(void) {
+	if (gameLocal.time - chaffStartTime > chaffDuration && enemyChaff) {
+		Event_EnableTarget();
+		enemyChaff = false;
+	}
 }
 
 /*
@@ -9005,6 +9079,16 @@ void idPlayer::AdjustSpeed( void ) {
 		gameLocal.GetLocalPlayer()->GiveWeaponMods(3, 2);
 		homingOn = true;
 	}
+
+	if (activateC4) {
+		ExplodeC4(newC4);
+	}
+	if (activateClaymore) {
+		ExplodeClaymore(newClaymore);
+	}
+
+	DeactivateStunGrenade();
+	DeactivateChaffGrenade();
 
 	SuperSpeedWarning();
 	InvisibilityWarning();

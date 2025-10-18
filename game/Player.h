@@ -271,11 +271,24 @@ class idPlayer : public idActor {
 public:
 
 	// weapon handling
-	bool explodeC4 = false;
 	bool homingOn = false;
 
-	// superpower activators/deactivators/cooldowns
+	idEntity* newC4;
+	bool activateC4 = false;
+	bool explodeC4 = false;
 
+	idEntity* newClaymore;
+	bool activateClaymore = false;
+
+	bool enemyStun = false;
+	int stunStartTime = 0;
+	int stunDuration = 750;
+
+	bool enemyChaff = false;
+	int chaffStartTime = 0;
+	int chaffDuration = 1500;
+
+	// superpower activators/deactivators/cooldowns
 	bool superPowerIsActive = false;
 
 	bool superSpeedIsActive = false;
@@ -582,6 +595,19 @@ public:
 	void					DiscoverSecretArea			( const char *description);
 	
 	void					StartBossBattle				( idEntity* ent );
+
+	// Weapon stuff :/
+	void					ActivateC4					(idEntity* c4);
+	void					ExplodeC4					(idEntity* c4);	
+
+	void					ActivateClaymore			(idEntity* claymore);
+	void					ExplodeClaymore				(idEntity* claymore);
+
+	void					ActivateStunGrenade			(void);
+	void					DeactivateStunGrenade		(void);
+
+	void					ActivateChaffGrenade		(void);
+	void					DeactivateChaffGrenade		(void);
 
 	// Superpowers
 	void					ActivateSuperSpeed          ( void );

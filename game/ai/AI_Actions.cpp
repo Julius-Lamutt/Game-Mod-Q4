@@ -465,6 +465,9 @@ bool idAI::PerformAction ( rvAIAction* action, bool (idAI::*condition)(rvAIActio
 		if ( !enemy.ent || enemy.ent->health <= 0 ) {
 			action->status = rvAIAction::STATUS_FAIL_NOENEMY;
 			return false;
+		} 
+		if (gameLocal.GetLocalPlayer()->enemyChaff) {
+			return false;
 		}
 	}		
 

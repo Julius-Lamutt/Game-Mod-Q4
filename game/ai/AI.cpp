@@ -4204,7 +4204,7 @@ idEntity *idAI::FindEnemy ( bool inFov, bool forceNearest, float maxDistSqr ){
 		// Modders take note, this will prevent most "sneaking up on bad guys" action because they will likely spike their aware ranges out
 		// during the sneaking.
 		if( gameLocal.random.RandomFloat() < 0.005f )	{
-			awareRangeSqr *= 15;
+			awareRangeSqr *= 1;
 		}
 
 		// fov doesn't matter if they're within awareRange, we "sense" them if we're alert... (or should LOS not even matter at this point?)
@@ -5101,8 +5101,8 @@ bool idAI::IsMeleeNeeded( void )	{
 		
 		idAI* enemyAI = static_cast<idAI*>(enemy.ent.GetEntity());
 
-		//if our enemy is closing in on us and demands melee, we'll meet him.
-		if ( enemyAI->combat.tacticalCurrent == AITACTICAL_MELEE && enemy.range < combat.meleeRange ) {
+		//if our enemy is closing in on us and demands melee, we'll meet him. Note:combat.meleeRange
+		if ( enemyAI->combat.tacticalCurrent == AITACTICAL_MELEE && enemy.range < combat.meleeRange*4 ) {
 			return true;
 		}
 	

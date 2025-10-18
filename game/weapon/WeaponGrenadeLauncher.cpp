@@ -144,6 +144,14 @@ stateResult_t rvWeaponGrenadeLauncher::State_Fire ( const stateParms_t& parms ) 
 	};	
 	switch ( parms.stage ) {
 		case STAGE_INIT:
+			idPlayer* player;
+			player = gameLocal.GetLocalPlayer();
+			if (player->currentWeapon == 7) {
+				player->ActivateStunGrenade();
+			}
+			if (player->currentWeapon == 8) {
+				player->ActivateChaffGrenade();
+			}
 			nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 			Attack ( false, 1, spread, 0, 1.0f );
 			PlayAnim ( ANIMCHANNEL_ALL, GetFireAnim(), 0 );	

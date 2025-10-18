@@ -319,7 +319,7 @@ void idProjectile::FreeLightDef( void ) {
 idProjectile::Launch
 =================
 */
-void idProjectile::Launch( const idVec3 &start, const idVec3 &dir, const idVec3 &pushVelocity, const float timeSinceFire, const float dmgPower ) {
+void idProjectile::Launch(const idVec3& start, const idVec3& dir, const idVec3& pushVelocity, const float timeSinceFire, const float dmgPower) {
 	float			fuse;
 	idVec3			velocity;
 	float			linear_friction;
@@ -332,17 +332,35 @@ void idProjectile::Launch( const idVec3 &start, const idVec3 &dir, const idVec3 
 	idVec3			gravVec;
 	idVec3			tmp;
 	int				contents;
- 	int				clipMask;
+	int				clipMask;
 
- 	// allow characters to throw projectiles during cinematics, but not the player
- 	if ( owner.GetEntity() && !owner.GetEntity()->IsType( idPlayer::GetClassType() ) ) {
- 		cinematic = owner.GetEntity()->cinematic;
- 	} else {
- 		cinematic = false;
- 	} 
+	// allow characters to throw projectiles during cinematics, but not the player
+	if (owner.GetEntity() && !owner.GetEntity()->IsType(idPlayer::GetClassType())) {
+		cinematic = owner.GetEntity()->cinematic;
+	}
+	else {
+		cinematic = false;
+	}
 
 	// Set the damage
 	damagePower = dmgPower;
+
+	idPlayer* player;
+	player = gameLocal.GetLocalPlayer();
+
+	// track launched C4s for detonation
+	if (player->currentWeapon == 4) {
+		idEntity* c4 = this;
+		player->ActivateC4(c4);
+	}
+	if (player->currentWeapon == 5) {
+		idEntity* claymore = this;
+		player->ActivateC4(claymore);
+	}
+
+	if (player->currentWeapon == 7 || player->currentWeapon == 8) {
+		damagePower = 0.0f;
+	}
 
 	if ( !spawnArgs.GetFloat( "speed", "0", temp ) ) {
 		spawnArgs.GetVector( "velocity", "0 0 0", tmp );
@@ -449,7 +467,6 @@ void idProjectile::Launch( const idVec3 &start, const idVec3 &dir, const idVec3 
 	physicsObj.SetOrigin( start );
 	physicsObj.SetAxis( dir.ToMat3() );
 
-	idPlayer* player = gameLocal.GetLocalPlayer();
 	int num = player->currentWeapon;
 
 	if ( !gameLocal.isClient) {
@@ -458,9 +475,9 @@ void idProjectile::Launch( const idVec3 &start, const idVec3 &dir, const idVec3 
 			RunPhysics();
 			PostEventMS( &EV_Remove, spawnArgs.GetInt( "remove_time", "1500" ) );
 		} else if ( spawnArgs.GetBool( "detonate_on_fuse" ) ) {
-			if ((num == 4 && player->explodeC4 == false) || num == 5 || num == 7 || num == 8) {
-				fuse = 100.0f;
-			}
+			if (num == 4 || num == 5 || num == 7 || num == 8) {
+				fuse = 100000.0f;
+			} 
 			fuse -= timeSinceFire;
 			if ( fuse < 0.0f ) {
 				fuse = 0.0f;
@@ -546,10 +563,6 @@ void idProjectile::Think( void ) {
 			if ( fuse > 0.0f ) {
 				if ( spawnArgs.GetBool( "detonate_on_fuse" ) ) {
 					CancelEvents( &EV_Explode );
-					if (player->explodeC4) {
-						PostEventSec(&EV_Explode, 0.0f);
-						player->explodeC4 = false;
-					}
 					PostEventSec( &EV_Explode, fuse );
 				} else {
 					CancelEvents( &EV_Fizzle );
