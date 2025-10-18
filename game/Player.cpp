@@ -11,8 +11,8 @@ FAMAS				...			Machine Gun			...         1 done
 PSG1				...			Shotgun				...			2 done
 Stinger				...			Hyperblaster		...			3 done
 C4					...			Grenade Launcher	...			4 done
-Claymore			...			Nail Gun			...			5 
-Grenade				...			Rocket Launcher		...			6 done
+Audio Lure			...			Nail Gun			...			5 do later
+Impulse Grenade		...			Rocket Launcher		...			6 
 Stun Grenade		...			Railgun				...			7 done
 Chaff Grenade		...			Lightning Gun		...			8 done
 Single Action Army	...			Dark Matter Gun		...			9 done
@@ -4317,24 +4317,12 @@ void idPlayer::ExplodeC4(idEntity* c4) {
 	}
 }
 
-void idPlayer::ActivateClaymore(idEntity* claymore) {
-	activateClaymore = true;
-	newClaymore = claymore;
-}
-
-void idPlayer::ExplodeClaymore(idEntity* claymore) {
-	idVec3		origin;
-	idEntity*	ent;
-
-	ent = ClosestEnemyToPoint(claymore->GetPhysics()->GetOrigin());
-	if (!ent) {
-		return;
-	}
-	if ((ent->GetPhysics()->GetOrigin() - claymore->GetPhysics()->GetOrigin()).Length() < 200.0f ) {
-		claymore->ProcessEvent(&EV_Explode);
-		claymore->CancelEvents(&EV_Explode);
-		activateClaymore = false;
-	}
+void idPlayer::ActivateImpulseGrenade(void) {
+	playerView.Flash(colorBlue, 100);
+	idVec3 origin = this->GetPhysics()->GetOrigin();
+	idAngles angles = this->GetPhysics()->GetAxis().ToAngles();
+	this->Teleport(origin + idVec3(0, 0, 75), angles, this);
+	SetViewAngles(angles);
 }
 
 void idPlayer::ActivateStunGrenade(void) {
@@ -9082,9 +9070,6 @@ void idPlayer::AdjustSpeed( void ) {
 
 	if (activateC4) {
 		ExplodeC4(newC4);
-	}
-	if (activateClaymore) {
-		ExplodeClaymore(newClaymore);
 	}
 
 	DeactivateStunGrenade();

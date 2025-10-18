@@ -146,6 +146,9 @@ stateResult_t rvWeaponGrenadeLauncher::State_Fire ( const stateParms_t& parms ) 
 		case STAGE_INIT:
 			idPlayer* player;
 			player = gameLocal.GetLocalPlayer();
+			if (player->currentWeapon == 6) {
+				player->ActivateImpulseGrenade();
+			}
 			if (player->currentWeapon == 7) {
 				player->ActivateStunGrenade();
 			}

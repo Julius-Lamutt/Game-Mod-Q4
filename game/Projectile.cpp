@@ -353,12 +353,8 @@ void idProjectile::Launch(const idVec3& start, const idVec3& dir, const idVec3& 
 		idEntity* c4 = this;
 		player->ActivateC4(c4);
 	}
-	if (player->currentWeapon == 5) {
-		idEntity* claymore = this;
-		player->ActivateClaymore(claymore);
-	}
 
-	if (player->currentWeapon == 7 || player->currentWeapon == 8) {
+	if (player->currentWeapon == 6 || player->currentWeapon == 7 || player->currentWeapon == 8) {
 		damagePower = 0.0f;
 	}
 
@@ -475,7 +471,7 @@ void idProjectile::Launch(const idVec3& start, const idVec3& dir, const idVec3& 
 			RunPhysics();
 			PostEventMS( &EV_Remove, spawnArgs.GetInt( "remove_time", "1500" ) );
 		} else if ( spawnArgs.GetBool( "detonate_on_fuse" ) ) {
-			if (num == 4 || num == 5 || num == 7 || num == 8) {
+			if (num == 4 || num == 5 || num == 6 || num == 7 || num == 8) {
 				fuse = 100000.0f;
 			} 
 			fuse -= timeSinceFire;

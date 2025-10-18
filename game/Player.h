@@ -277,8 +277,7 @@ public:
 	bool activateC4 = false;
 	bool explodeC4 = false;
 
-	idEntity* newClaymore;
-	bool activateClaymore = false;
+	bool grenadeImpulse = false;
 
 	bool enemyStun = false;
 	int stunStartTime = 0;
@@ -600,8 +599,7 @@ public:
 	void					ActivateC4					(idEntity* c4);
 	void					ExplodeC4					(idEntity* c4);	
 
-	void					ActivateClaymore			(idEntity* claymore);
-	void					ExplodeClaymore				(idEntity* claymore);
+	void					ActivateImpulseGrenade		(void);
 
 	void					ActivateStunGrenade			(void);
 	void					DeactivateStunGrenade		(void);
