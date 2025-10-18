@@ -355,7 +355,7 @@ void idProjectile::Launch(const idVec3& start, const idVec3& dir, const idVec3& 
 	}
 	if (player->currentWeapon == 5) {
 		idEntity* claymore = this;
-		player->ActivateC4(claymore);
+		player->ActivateClaymore(claymore);
 	}
 
 	if (player->currentWeapon == 7 || player->currentWeapon == 8) {

@@ -4330,7 +4330,7 @@ void idPlayer::ExplodeClaymore(idEntity* claymore) {
 	if (!ent) {
 		return;
 	}
-	if ((ent->GetPhysics()->GetOrigin() - claymore->GetPhysics()->GetOrigin()).Length() > 20.0f ) {
+	if ((ent->GetPhysics()->GetOrigin() - claymore->GetPhysics()->GetOrigin()).Length() < 200.0f ) {
 		claymore->ProcessEvent(&EV_Explode);
 		claymore->CancelEvents(&EV_Explode);
 		activateClaymore = false;
