@@ -12,14 +12,14 @@ PSG1				...			Shotgun				...			2 done
 Stinger				...			Hyperblaster		...			3 done
 C4					...			Grenade Launcher	...			4 done
 Audio Lure			...			Nail Gun			...			5 do later
-Impulse Grenade		...			Rocket Launcher		...			6 
+Impulse Grenade		...			Rocket Launcher		...			6 done
 Stun Grenade		...			Railgun				...			7 done
 Chaff Grenade		...			Lightning Gun		...			8 done
 Single Action Army	...			Dark Matter Gun		...			9 done
 M61 Vulcan			...			Napalm Gun			...			10 done
 Items:
 Flashlight
-Mine Detector
+CardboardBox
 Diazepam
 SOCOM Suppressor
 FAMAS Suppressor

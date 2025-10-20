@@ -478,6 +478,8 @@ public:
 public:
 	CLASS_PROTOTYPE( idPlayer );
 
+	void					Event_DisableTarget(void);
+
 							idPlayer();
 	virtual					~idPlayer();
 
@@ -1179,7 +1181,7 @@ private:
 	void					Event_AllowFallDamage		( int toggle );
 	
 	void					Event_EnableTarget			( void );
-	void					Event_DisableTarget			( void );
+	//void					Event_DisableTarget			( void );
 	virtual void			Event_DamageOverTimeEffect	( int endTime, int interval, const char *damageDefName );
 	
 	// RAVEN BEGIN
