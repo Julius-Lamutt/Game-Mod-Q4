@@ -4376,6 +4376,7 @@ void idPlayer::DeactivateSuperSpeed( void ) {
 	if (gameLocal.time - superSpeedStartTime > superSpeedEndTime && superSpeedIsActive) {
 		superPowerIsActive = false;
 		superSpeedIsActive = false;
+		GivePowerUp(POWERUP_HASTE, 15000);
 	}
 }
 
@@ -4403,7 +4404,7 @@ float idPlayer::SuperSpeed ( bool active ) {
 void idPlayer::ActivateInvisibility(void) {
 	invisibilityStartTime = gameLocal.time;
 	Event_DisableTarget();
-	playerView.Flash( colorPurple, 400);
+	playerView.Flash( colorBlue, 400);
 	superPowerIsActive = true;
 	invisibilityIsActive = true;
 }
@@ -4413,12 +4414,13 @@ void idPlayer::DeactivateInvisibility(void) {
 		Event_EnableTarget();
 		superPowerIsActive = false;
 		invisibilityIsActive = false;
+		GivePowerUp(POWERUP_INVISIBILITY, 25000);
 	}
 }
 
 void idPlayer::InvisibilityWarning(void) {
 	if (gameLocal.time - invisibilityStartTime == invisibilityEndTime - 800) {
-		playerView.Flash( colorPurple, 400 );
+		playerView.Flash( colorBlue, 400 );
 	}
 }
 
@@ -4466,6 +4468,7 @@ void idPlayer::DeactivateTeleportation(void) {
 		Event_EnableTarget();
 		superPowerIsActive = false;
 		teleportationIsActive = false;
+		GivePowerUp(POWERUP_QUADDAMAGE, 8000);
 	}
 }
 
@@ -4488,6 +4491,7 @@ void idPlayer::DeactivateInvincibility( void ) {
 		godmode = false;
 		superPowerIsActive = false;
 		invincibilityIsActive = false;
+		GivePowerUp(POWERUP_REGENERATION, 25000);
 	}
 }
 
@@ -4526,6 +4530,7 @@ void idPlayer::DeactivateDoppleganger( void ) {
 	if (gameLocal.time - dopplegangerStartTime > dopplegangerEndTime && dopplegangerIsActive) {
 		superPowerIsActive = false;
 		dopplegangerIsActive = false;
+		GivePowerUp(POWERUP_SCOUT, 25000);
 	}
 }
 
@@ -4546,15 +4551,15 @@ float idPlayer::PowerUpModifier( int type ) {
 	if ( PowerUpActive( POWERUP_QUADDAMAGE ) ) {
 		switch( type ) {
 			case PMOD_PROJECTILE_DAMAGE: {
-				mod *= 3.0f;
+				mod *= 1.0f;
 				break;
 			}
 			case PMOD_MELEE_DAMAGE: {
-				mod *= 3.0f;
+				mod *= 1.0f;
 				break;
 			}
 			case PMOD_PROJECTILE_DEATHPUSH: {
-				mod *= 2.0f;
+				mod *= 1.0f;
 				break;
 			}
 		}
@@ -4563,11 +4568,11 @@ float idPlayer::PowerUpModifier( int type ) {
 	if ( PowerUpActive( POWERUP_HASTE ) ) {
 		switch ( type ) {
 			case PMOD_SPEED:	
-				mod *= 1.3f; //was 1.3f
+				mod *= 1.0f; 
 				break;
 
 			case PMOD_FIRERATE:
-				mod *= 0.7f;
+				mod *= 1.0f;
 				break;
 		}
 	}
@@ -4616,11 +4621,11 @@ float idPlayer::PowerUpModifier( int type ) {
 	if( PowerUpActive( POWERUP_SCOUT ) ) {
 		switch( type ) {
 			case PMOD_FIRERATE: {
-				mod *= (2.0f / 3.0f);
+				mod *= 1.0f;
 				break;
 			}
 			case PMOD_SPEED: {	
-				mod *= 1.5f;
+				mod *= 1.0f;
 				break;
 			}
 		}
@@ -4739,7 +4744,7 @@ void idPlayer::StartPowerUpEffect( int powerup ) {
 				// don't accumulate. clear whatever was there
 				arenaEffect->Stop( true );
 			}
-			arenaEffect = PlayEffect( "fx_scout", physicsObj.GetOrigin(), physicsObj.GetAxis(), true );
+			//arenaEffect = PlayEffect( "fx_scout", physicsObj.GetOrigin(), physicsObj.GetAxis(), true );
 			break;
 		}
 		
@@ -5224,8 +5229,9 @@ void idPlayer::UpdatePowerUps( void ) {
 			inventory.armor--;
 		}		
 	}
-		
-	// Assign the powerup skin as long as we are alive
+	
+	// Assign the powerup skin as long as we are alive 
+	/*
  	if ( health > 0 ) {
  		if ( powerUpSkin ) {
  			renderEntity.customSkin = powerUpSkin;
@@ -5281,6 +5287,7 @@ void idPlayer::UpdatePowerUps( void ) {
 			}
 		}
 	}
+	*/
 
 	// Spawn quad effect
 	if( PowerUpActive( powerupEffectType ) && powerupEffect && gameLocal.time >= powerupEffectTime  ) {
@@ -9085,7 +9092,6 @@ void idPlayer::AdjustSpeed( void ) {
 	DeactivateInvincibility();
 	DeactivateDoppleganger();
 
-	speed *= PowerUpModifier( PMOD_SPEED );
 	speed *= SuperSpeed( superSpeedIsActive );
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
