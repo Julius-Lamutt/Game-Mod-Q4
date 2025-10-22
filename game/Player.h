@@ -287,6 +287,16 @@ public:
 	int chaffStartTime = 0;
 	int chaffDuration = 1500;
 
+	// item handling
+	bool flashlight = false;
+
+	int diazepam = 0;
+	const int DIAZEPAM_MAX = 3;
+
+	bool socomSuppressor = false;
+
+	bool famasSuppressor = false;
+
 	// superpower activators/deactivators/cooldowns
 	bool superPowerIsActive = false;
 

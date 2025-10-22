@@ -1085,9 +1085,15 @@ void rvWeapon::Think ( void ) {
 		}
 	}
 
-	// Alert Monsters if the flashlight is one or a muzzle flash is active?
+	// Alert Monsters if the flashlight is on or a muzzle flash is active?
 	if ( !gameLocal.isMultiplayer ) {
 		if ( !owner->fl.notarget && (lightHandles[WPLIGHT_MUZZLEFLASH] != -1 || lightHandles[WPLIGHT_FLASHLIGHT] != -1 ) ) {
+			if (owner->currentWeapon == 0 && owner->socomSuppressor) {
+				return;
+			}
+			if (owner->currentWeapon == 1 && owner->famasSuppressor) {
+				return;
+			}
 			AlertMonsters ( );
 		}
 	}

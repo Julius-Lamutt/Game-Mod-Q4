@@ -4110,6 +4110,25 @@ bool idPlayer::Give( const char *statname, const char *value, bool dropped ) {
 			return false;
 		}
  		amount = atoi( value );
+		// flashlight
+		if (amount == 2) {
+			flashlight = true;
+			return true;
+		}
+		if (amount == 3) {
+			return true;
+		}
+		if (amount == 4) {
+			return true;
+		}
+		if (amount == 5) {
+			socomSuppressor = true;
+			return true;
+		}
+		if (amount == 6) {
+			famasSuppressor = true;
+			return true;
+		}
  		if ( amount ) {
  			health += amount;
  			if ( health > boundaryHealth ) {
@@ -4252,7 +4271,6 @@ bool idPlayer::GiveItem( idItem *item ) {
 	} else {
 		gave = true;
 	}
-
 	arg = item->spawnArgs.MatchPrefix( "inv_ammo_", NULL );
 	if ( arg && hud ) {
 		hud->HandleNamedEvent( "ammoPulse" );
