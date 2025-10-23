@@ -70,7 +70,7 @@ const int IMPULSE_26			= 26;			// invincibility
 const int IMPULSE_27			= 27;			// doppleganger
 const int IMPULSE_28			= 28;			// cardboard box
 const int IMPULSE_29			= 29;			// diazepam
-const int IMPULSE_40			= 40;			// repeast last radio chatter
+const int IMPULSE_40			= 40;			// AP Sensor
 
 // RAVEN BEGIN
 // bdube: added flashlight

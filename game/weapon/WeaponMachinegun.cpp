@@ -117,7 +117,7 @@ rvWeaponMachinegun::UpdateFlashlight
 ================
 */
 bool rvWeaponMachinegun::UpdateFlashlight ( void ) {
-	if ( !wsfl.flashlight || !gameLocal.GetLocalPlayer()->flashlight ) {
+	if ( !wsfl.flashlight ) {
 		return false;
 	}
 	

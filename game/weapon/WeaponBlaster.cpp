@@ -62,7 +62,7 @@ rvWeaponBlaster::UpdateFlashlight
 ================
 */
 bool rvWeaponBlaster::UpdateFlashlight ( void ) {
-	if ( !wsfl.flashlight || !gameLocal.GetLocalPlayer()->flashlight ) {
+	if ( !wsfl.flashlight ) {
 		return false;
 	}
 	

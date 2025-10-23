@@ -4123,9 +4123,9 @@ bool idPlayer::Give( const char *statname, const char *value, bool dropped ) {
 		}
 		amount = atoi( value );
 
-		// flashlight
+		// AP sensor
 		if (amount == 2) {
-			flashlight = true;
+			apSensor = true;
 			return true;
 		}
 		// cardboard box
@@ -4135,6 +4135,7 @@ bool idPlayer::Give( const char *statname, const char *value, bool dropped ) {
 		}
 		// diazepam
 		if (amount == 4) {
+			diazepamInInventory = true;
 			return true;
 		}
 		// SOCOM suppressor
@@ -4389,23 +4390,55 @@ Item Stuff
 ===============
 */
 
-void idPlayer::StunEnemy(void) {
-	idVec3 origin;
-	idVec3 entOrigin;
-	idEntity* ent;
-	origin = gameLocal.GetLocalPlayer()->GetPhysics()->GetOrigin();
-	ent = ClosestEnemyToPoint(origin, 300.0f);
-	if (!ent) {
-		return;
+void idPlayer::ActivateSensor(void) {
+	if (!apSensorActive) {
+		apSensorActive = true;
 	}
-	if (flashlightOn) {
-		ent->DormantBegin();
+}
+
+void idPlayer::SenseEntity(void) {
+	if (apSensorActive) {
+		idVec3 origin;
+		idVec3 entOrigin;
+		idEntity* ent;
+		origin = gameLocal.GetLocalPlayer()->GetPhysics()->GetOrigin();
+		ent = ClosestEnemyToPoint(origin);
+		if (!ent) {
+			return;
+		}
+		entOrigin = ent->GetPhysics()->GetOrigin();
+		float len = (entOrigin - origin).Length();
+		if (len < 1000.0f) {
+			if (gameLocal.time % 1000 == 0) { 
+				if (!apSensorClear) {
+					playerView.Fade(colorCyan, 3000);
+					beatStartTime = gameLocal.time;
+					apSensorClear = true;
+				}
+			}
+		}
+		else {
+			playerView.ClearEffects();
+		}
+	}
+}
+
+void idPlayer::SenseClear(void) {
+	if (gameLocal.time - beatStartTime > 1000 && apSensorClear) {
+		apSensorClear = false;
+		playerView.ClearEffects();
+	}
+}
+
+void idPlayer::DeactivateSensor(void) {
+	if (apSensorActive){
+		apSensorActive = false;
 	}
 }
 
 void idPlayer::ActivateDiazepam(void) {
 	if (!diazepamActive) {
-		playerView.Flash(colorBlack, 200);
+		playerView.Flash(colorBlack, 300);
 		diazepamStartTime = gameLocal.time;
 		diazepamActive = true;
 	}
@@ -4413,7 +4446,7 @@ void idPlayer::ActivateDiazepam(void) {
 
 void idPlayer::DeactivateDiazepam(void) {
 	if (gameLocal.time - diazepamStartTime > diazepamDuration && diazepamActive) {
-		playerView.Flash(colorBlack, 100);
+		playerView.Flash(colorBlack, 300);
 		diazepamActive = false;
 	}
 }
@@ -4550,7 +4583,7 @@ void idPlayer::DeactivateInvincibility( void ) {
 		godmode = false;
 		superPowerIsActive = false;
 		invincibilityIsActive = false;
-		GivePowerUp(POWERUP_REGENERATION, 25000);
+		GivePowerUp(POWERUP_DOUBLER, 25000);
 	}
 }
 
@@ -8943,12 +8976,21 @@ void idPlayer::PerformImpulse( int impulse ) {
 			}
 			break;
    		}
-   		case IMPULSE_29: {
-			ActivateDiazepam();
+		case IMPULSE_29: {
+			if (diazepamInInventory) {
+				ActivateDiazepam();
+			}
    			break;
    		}
 		case IMPULSE_40: {
-			idFuncRadioChatter::RepeatLast();
+			if (apSensor) {
+				if (!apSensorActive) {
+					ActivateSensor();
+				}
+				else {
+					DeactivateSensor();
+				}
+			}
 			break;
 		}
 
@@ -9147,6 +9189,9 @@ void idPlayer::AdjustSpeed( void ) {
 
 	DeactivateStunGrenade();
 	DeactivateChaffGrenade();
+
+	SenseEntity();
+	SenseClear();
 
 	DeactivateDiazepam();
 

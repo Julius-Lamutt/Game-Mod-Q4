@@ -288,12 +288,16 @@ public:
 	int chaffDuration = 1500;
 
 	// item handling
-	bool flashlight = false;
+	bool apSensor = false;
+	bool apSensorActive = false;
+	bool apSensorClear = false;
+	int beatStartTime = 0;
 
 	bool cardboardBox = false;
 	bool inBox = false;
 
 	int diazepam = 0;
+	bool diazepamInInventory = false;
 	const int DIAZEPAM_MAX = 3;
 	bool diazepamActive = false;
 	int diazepamStartTime = 0;
@@ -627,10 +631,13 @@ public:
 	void					DeactivateChaffGrenade		(void);
 
 	// Item Stuff
-	void					StunEnemy				(void);
+	void					ActivateSensor				(void);
+	void					SenseEntity					(void);
+	void					SenseClear					(void);
+	void					DeactivateSensor			(void);
 
-	void					ActivateDiazepam		(void);
-	void					DeactivateDiazepam		(void);
+	void					ActivateDiazepam			(void);
+	void					DeactivateDiazepam			(void);
 
 	// Superpowers
 	void					ActivateSuperSpeed          ( void );
