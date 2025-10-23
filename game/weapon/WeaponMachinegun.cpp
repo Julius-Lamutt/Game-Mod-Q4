@@ -117,7 +117,7 @@ rvWeaponMachinegun::UpdateFlashlight
 ================
 */
 bool rvWeaponMachinegun::UpdateFlashlight ( void ) {
-	if ( !wsfl.flashlight ) {
+	if ( !wsfl.flashlight || !gameLocal.GetLocalPlayer()->flashlight ) {
 		return false;
 	}
 	
@@ -228,21 +228,28 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 	idPlayer* player;
 	player = gameLocal.GetLocalPlayer();
 
+	if (player->diazepamActive) {
+		player->diazepamModifier = 0.2f;
+	}
+	else if (player->diazepamStartTime > 0) {
+		player->diazepamModifier = 1.0f;
+	}
+
 	switch ( parms.stage ) {
 		case STAGE_INIT:
 			if ( wsfl.zoom ) {
 				nextAttackTime = gameLocal.time + (altFireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
-				Attack ( true, 1, spreadZoom, 0, 1.0f );
+				Attack ( true, 1, spreadZoom * (player->diazepamModifier), 0, 1.0f );
 				fireHeld = true;
 			} else if (player->currentWeapon == 1) {
 				nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier(PMOD_FIRERATE));
-				Attack ( false, 1, spread, 0, 1.0f );
-				Attack(false, 1, spread, 0, 1.0f);
-				Attack(false, 1, spread, 0, 1.0f);
+				Attack ( false, 1, spread * (player->diazepamModifier), 0, 1.0f );
+				Attack(false, 1, spread * (player->diazepamModifier), 0, 1.0f);
+				Attack(false, 1, spread * (player->diazepamModifier), 0, 1.0f);
 			}
 			else {
 				nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier(PMOD_FIRERATE));
-				Attack(false, 1, spread*5, 0, 1.0f);
+				Attack(false, 1, spread*5 * (player->diazepamModifier), 0, 1.0f);
 			}
 			PlayAnim ( ANIMCHANNEL_ALL, "fire", 0 );	
 			return SRESULT_STAGE ( STAGE_WAIT );

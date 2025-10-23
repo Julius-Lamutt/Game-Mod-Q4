@@ -1088,13 +1088,9 @@ void rvWeapon::Think ( void ) {
 	// Alert Monsters if the flashlight is on or a muzzle flash is active?
 	if ( !gameLocal.isMultiplayer ) {
 		if ( !owner->fl.notarget && (lightHandles[WPLIGHT_MUZZLEFLASH] != -1 || lightHandles[WPLIGHT_FLASHLIGHT] != -1 ) ) {
-			if (owner->currentWeapon == 0 && owner->socomSuppressor) {
-				return;
+			if (!(owner->currentWeapon == 0 && owner->socomSuppressor) && !(owner->currentWeapon == 1 && owner->famasSuppressor)) {
+				AlertMonsters();
 			}
-			if (owner->currentWeapon == 1 && owner->famasSuppressor) {
-				return;
-			}
-			AlertMonsters ( );
 		}
 	}
 }
@@ -2858,7 +2854,7 @@ void rvWeapon::AlertMonsters( void ) {
  		gameRenderWorld->DebugArrow( colorGreen, muzzleFlash.origin, tr.endpos, 2, 0 );
 	}
 
-	if ( tr.fraction < 1.0f ) {
+	if ( tr.fraction < 1.0f ) { 
  		ent = gameLocal.GetTraceEntity( tr );
 		if ( ent->IsType( idAI::GetClassType() ) ) {
 			static_cast<idAI *>( ent )->TouchedByFlashlight( owner );

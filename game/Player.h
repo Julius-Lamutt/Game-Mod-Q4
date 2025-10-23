@@ -290,8 +290,15 @@ public:
 	// item handling
 	bool flashlight = false;
 
+	bool cardboardBox = false;
+	bool inBox = false;
+
 	int diazepam = 0;
 	const int DIAZEPAM_MAX = 3;
+	bool diazepamActive = false;
+	int diazepamStartTime = 0;
+	int diazepamDuration = 7500;
+	float diazepamModifier = 1.0f;
 
 	bool socomSuppressor = false;
 
@@ -607,7 +614,7 @@ public:
 	
 	void					StartBossBattle				( idEntity* ent );
 
-	// Weapon stuff :/
+	// Weapon Stuff :/
 	void					ActivateC4					(idEntity* c4);
 	void					ExplodeC4					(idEntity* c4);	
 
@@ -618,6 +625,12 @@ public:
 
 	void					ActivateChaffGrenade		(void);
 	void					DeactivateChaffGrenade		(void);
+
+	// Item Stuff
+	void					StunEnemy				(void);
+
+	void					ActivateDiazepam		(void);
+	void					DeactivateDiazepam		(void);
 
 	// Superpowers
 	void					ActivateSuperSpeed          ( void );

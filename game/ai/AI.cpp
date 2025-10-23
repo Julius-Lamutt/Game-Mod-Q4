@@ -1926,6 +1926,7 @@ void idAI::TouchedByFlashlight( idActor *flashlight_owner ) {
 	if ( RespondToFlashlight() ) {
 		Activate( flashlight_owner );
 	}
+	blinded = true;
 }
 
 /*
@@ -1938,7 +1939,6 @@ void idAI::ClearEnemy( bool dead ) {
 	if ( !enemy.ent ) {
 		return;
 	}
-
 	if ( move.moveCommand == MOVE_TO_ENEMY ) {
 		StopMove( MOVE_STATUS_DEST_NOT_FOUND );
 	} else if ( !aifl.scripted
@@ -1998,7 +1998,9 @@ idAI::UpdateEnemy
 */
 void idAI::UpdateEnemy ( void ) {
 	predictedPath_t predictedPath;
-	
+	if ( blinded ) {
+		return;
+	}
 	// If we lost our enemy then clear it out to be sure
 	if( !enemy.ent ) {
 		return;

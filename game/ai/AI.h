@@ -465,7 +465,6 @@ public:
 	// Add some dynamic externals for debugging
 	virtual void			GetDebugInfo					( debugInfoProc_t proc, void* userData );
 
-
    	bool					IsEnemyVisible					( void ) const;
   	bool					InCoverMode						( void ) const;
   	bool					InCrouchCoverMode				( void ) const;
@@ -480,6 +479,9 @@ public:
 
 
 public:
+
+	//Custom AI Configurations
+	bool blinded = false;
 
 	idLinkList<idAI>		simpleThinkNode;
 

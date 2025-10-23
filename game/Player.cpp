@@ -4109,26 +4109,7 @@ bool idPlayer::Give( const char *statname, const char *value, bool dropped ) {
 		if ( health >= boundaryHealth ) {
 			return false;
 		}
- 		amount = atoi( value );
-		// flashlight
-		if (amount == 2) {
-			flashlight = true;
-			return true;
-		}
-		if (amount == 3) {
-			return true;
-		}
-		if (amount == 4) {
-			return true;
-		}
-		if (amount == 5) {
-			socomSuppressor = true;
-			return true;
-		}
-		if (amount == 6) {
-			famasSuppressor = true;
-			return true;
-		}
+		amount = atoi(value);
  		if ( amount ) {
  			health += amount;
  			if ( health > boundaryHealth ) {
@@ -4141,6 +4122,31 @@ bool idPlayer::Give( const char *statname, const char *value, bool dropped ) {
 			return false;
 		}
 		amount = atoi( value );
+
+		// flashlight
+		if (amount == 2) {
+			flashlight = true;
+			return true;
+		}
+		// cardboard box
+		if (amount == 3) {
+			cardboardBox = true;
+			return true;
+		}
+		// diazepam
+		if (amount == 4) {
+			return true;
+		}
+		// SOCOM suppressor
+		if (amount == 6) {
+			socomSuppressor = true;
+			return true;
+		}
+		// FAMAS suppressor
+		if (amount == 7) {
+			famasSuppressor = true;
+			return true;
+		}
  		if ( amount ) {
  			health += amount;
  			if ( health > boundaryHealth * 2 ) {
@@ -4374,6 +4380,41 @@ void idPlayer::DeactivateChaffGrenade(void) {
 	if (gameLocal.time - chaffStartTime > chaffDuration && enemyChaff) {
 		Event_EnableTarget();
 		enemyChaff = false;
+	}
+}
+
+/*
+===============
+Item Stuff
+===============
+*/
+
+void idPlayer::StunEnemy(void) {
+	idVec3 origin;
+	idVec3 entOrigin;
+	idEntity* ent;
+	origin = gameLocal.GetLocalPlayer()->GetPhysics()->GetOrigin();
+	ent = ClosestEnemyToPoint(origin, 300.0f);
+	if (!ent) {
+		return;
+	}
+	if (flashlightOn) {
+		ent->DormantBegin();
+	}
+}
+
+void idPlayer::ActivateDiazepam(void) {
+	if (!diazepamActive) {
+		playerView.Flash(colorBlack, 200);
+		diazepamStartTime = gameLocal.time;
+		diazepamActive = true;
+	}
+}
+
+void idPlayer::DeactivateDiazepam(void) {
+	if (gameLocal.time - diazepamStartTime > diazepamDuration && diazepamActive) {
+		playerView.Flash(colorBlack, 100);
+		diazepamActive = false;
 	}
 }
 
@@ -8888,15 +8929,22 @@ void idPlayer::PerformImpulse( int impulse ) {
 		}
 				
 		case IMPULSE_28: {
- 			if ( gameLocal.isClient || entityNumber == gameLocal.localClientNum ) {
- 				gameLocal.mpGame.CastVote( gameLocal.localClientNum, true );
-   			}
-   			break;
+			if (cardboardBox) {
+				if (!inBox) {
+					Event_DisableTarget();
+					playerView.Fade(colorBrown, 100);
+					inBox = true;
+				}
+				else {
+					Event_EnableTarget();
+					playerView.ClearEffects();
+					inBox = false;
+				}
+			}
+			break;
    		}
    		case IMPULSE_29: {
- 			if ( gameLocal.isClient || entityNumber == gameLocal.localClientNum ) {
-				gameLocal.mpGame.CastVote( gameLocal.localClientNum, false );
-   			}
+			ActivateDiazepam();
    			break;
    		}
 		case IMPULSE_40: {
@@ -9099,6 +9147,8 @@ void idPlayer::AdjustSpeed( void ) {
 
 	DeactivateStunGrenade();
 	DeactivateChaffGrenade();
+
+	DeactivateDiazepam();
 
 	SuperSpeedWarning();
 	InvisibilityWarning();
