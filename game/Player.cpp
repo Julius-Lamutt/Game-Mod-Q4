@@ -11,7 +11,7 @@ FAMAS				...			Machine Gun			...         1 done
 PSG1				...			Shotgun				...			2 done
 Stinger				...			Hyperblaster		...			3 done
 C4					...			Grenade Launcher	...			4 done
-Audio Lure			...			Nail Gun			...			5 do later
+Stim Grenade		...			Nail Gun			...			5 done
 Impulse Grenade		...			Rocket Launcher		...			6 done
 Stun Grenade		...			Railgun				...			7 done
 Chaff Grenade		...			Lightning Gun		...			8 done
@@ -4346,7 +4346,7 @@ void idPlayer::ActivateImpulseGrenade(void) {
 	playerView.Flash(colorBlue, 100);
 	idVec3 origin = this->GetPhysics()->GetOrigin();
 	idAngles angles = this->GetPhysics()->GetAxis().ToAngles();
-	this->Teleport(origin + idVec3(0, 0, 75), angles, this);
+	this->Teleport(origin + idVec3(-250, 0, 75), angles, this);
 	SetViewAngles(angles);
 }
 
