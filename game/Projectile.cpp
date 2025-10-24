@@ -354,7 +354,8 @@ void idProjectile::Launch(const idVec3& start, const idVec3& dir, const idVec3& 
 		player->ActivateC4(c4);
 	}
 
-	if (player->currentWeapon == 6 || player->currentWeapon == 7 || player->currentWeapon == 8) {
+
+	if (player->currentWeapon == 5 || player->currentWeapon == 6 || player->currentWeapon == 7 || player->currentWeapon == 8) {
 		damagePower = 0.0f;
 	}
 
@@ -477,6 +478,12 @@ void idProjectile::Launch(const idVec3& start, const idVec3& dir, const idVec3& 
 			fuse -= timeSinceFire;
 			if ( fuse < 0.0f ) {
 				fuse = 0.0f;
+			}
+			if (player->currentWeapon == 5) {
+				if (player->health + 2 <= 120) {
+					player->health += 2;
+				}
+				player->playerView.Flash(colorGreen, 200);
 			}
 			PostEventSec( &EV_Explode, fuse );
 		} else {

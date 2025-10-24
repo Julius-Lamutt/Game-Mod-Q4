@@ -18,7 +18,7 @@ Chaff Grenade		...			Lightning Gun		...			8 done
 Single Action Army	...			Dark Matter Gun		...			9 done
 M61 Vulcan			...			Napalm Gun			...			10 done
 Items:
-Flashlight
+AP Sensor
 CardboardBox
 Diazepam
 SOCOM Suppressor
