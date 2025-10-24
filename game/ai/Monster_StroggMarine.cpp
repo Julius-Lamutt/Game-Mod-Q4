@@ -277,13 +277,15 @@ rvMonsterStroggMarine::CheckAction_RangedAttack
 ================
 */
 bool rvMonsterStroggMarine::CheckAction_RangedAttack ( rvAIAction* action, int animNum ) {
-
+	if (gameLocal.GetLocalPlayer()->enemyChaff) {
+		return false;
+	}
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
 	if ( spawnArgs.GetBool( "rangeAttackChanceInverse" )
 		&& enemy.range-action->minRange > gameLocal.random.RandomFloat()*(action->maxRange-action->minRange) ) {
-		//the father away you are, the more likely you are to not attack
+		//the farther away you are, the more likely you are to not attack
 		return false;
 	}
 	if ( spawnArgs.GetBool( "rangeAttackChance" )
@@ -299,8 +301,10 @@ bool rvMonsterStroggMarine::CheckAction_RangedAttack ( rvAIAction* action, int a
 rvMonsterStroggMarine::CheckAction_CrouchRangedAttack
 ================
 */
-bool rvMonsterStroggMarine::CheckAction_CrouchRangedAttack ( rvAIAction* action, int animNum )
-{
+bool rvMonsterStroggMarine::CheckAction_CrouchRangedAttack ( rvAIAction* action, int animNum ) {
+	if (gameLocal.GetLocalPlayer()->enemyChaff) {
+		return false;
+	}
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}
@@ -344,8 +348,10 @@ bool rvMonsterStroggMarine::CheckAction_RollAttack ( rvAIAction* action, int ani
 rvMonsterStroggMarine::CheckAction_SprayAttack
 ================
 */
-bool rvMonsterStroggMarine::CheckAction_SprayAttack ( rvAIAction* action, int animNum )
-{
+bool rvMonsterStroggMarine::CheckAction_SprayAttack ( rvAIAction* action, int animNum ) {
+	if (gameLocal.GetLocalPlayer()->enemyChaff) {
+		return false;
+	}
 	if ( !enemy.ent || !enemy.fl.inFov ) {
 		return false;
 	}

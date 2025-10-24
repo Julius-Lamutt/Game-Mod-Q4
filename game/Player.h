@@ -285,7 +285,7 @@ public:
 
 	bool enemyChaff = false;
 	int chaffStartTime = 0;
-	int chaffDuration = 1500;
+	int chaffDuration = 5000;
 
 	// item handling
 	bool apSensor = false;

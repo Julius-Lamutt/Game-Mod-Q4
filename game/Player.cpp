@@ -4370,7 +4370,6 @@ void idPlayer::DeactivateStunGrenade(void) {
 void idPlayer::ActivateChaffGrenade(void) {
 	if (!enemyChaff) {
 		chaffStartTime = gameLocal.time;
-		Event_DisableTarget();
 		playerView.Flash(colorOrange, 100);
 		enemyChaff = true;
 	}
@@ -4379,7 +4378,6 @@ void idPlayer::ActivateChaffGrenade(void) {
 
 void idPlayer::DeactivateChaffGrenade(void) {
 	if (gameLocal.time - chaffStartTime > chaffDuration && enemyChaff) {
-		Event_EnableTarget();
 		enemyChaff = false;
 	}
 }

@@ -5098,13 +5098,12 @@ idAI::IsMeleeNeeded
 ===================
 */
 bool idAI::IsMeleeNeeded( void )	{
-
 	if( enemy.ent && enemy.ent->IsType ( idAI::Type ))	{
 		
 		idAI* enemyAI = static_cast<idAI*>(enemy.ent.GetEntity());
 
 		//if our enemy is closing in on us and demands melee, we'll meet him. Note:combat.meleeRange
-		if ( enemyAI->combat.tacticalCurrent == AITACTICAL_MELEE && enemy.range < combat.meleeRange*4 ) {
+		if ( enemyAI->combat.tacticalCurrent == AITACTICAL_MELEE && enemy.range < combat.meleeRange ) {
 			return true;
 		}
 	
