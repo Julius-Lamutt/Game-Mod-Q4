@@ -269,6 +269,8 @@ public:
 
 class idPlayer : public idActor {
 public:
+	// stealth mechanics
+	bool isHidden = true;
 
 	// weapon handling
 	bool homingOn = false;
@@ -305,8 +307,10 @@ public:
 	float diazepamModifier = 1.0f;
 
 	bool socomSuppressor = false;
-
 	bool famasSuppressor = false;
+	bool suppressorActive = false;
+	int suppressorStartTime = 0;
+	int suppressorDuration = 400;
 
 	// superpower activators/deactivators/cooldowns
 	bool superPowerIsActive = false;
@@ -638,6 +642,9 @@ public:
 
 	void					ActivateDiazepam			(void);
 	void					DeactivateDiazepam			(void);
+
+	void					ActivateSuppressor			(void);
+	void					DeactivateSuppressor		(void);
 
 	// Superpowers
 	void					ActivateSuperSpeed          ( void );

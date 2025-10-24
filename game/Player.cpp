@@ -9,7 +9,7 @@ Weapons:
 SOCOM				...			Blaster				...			0 done
 FAMAS				...			Machine Gun			...         1 done
 PSG1				...			Shotgun				...			2 done
-Stinger				...			Hyperblaster		...			3 done
+Nikita				...			Hyperblaster		...			3 done
 C4					...			Grenade Launcher	...			4 done
 Stim Grenade		...			Nail Gun			...			5 done
 Impulse Grenade		...			Rocket Launcher		...			6 done
@@ -4446,6 +4446,21 @@ void idPlayer::DeactivateDiazepam(void) {
 	if (gameLocal.time - diazepamStartTime > diazepamDuration && diazepamActive) {
 		playerView.Flash(colorBlack, 300);
 		diazepamActive = false;
+	}
+}
+
+void idPlayer::ActivateSuppressor(void) {
+	if (!suppressorActive) {
+		suppressorActive = true;
+		Event_DisableTarget();
+		suppressorStartTime = gameLocal.time;
+	}
+}
+
+void idPlayer::DeactivateSuppressor(void) {
+	if (gameLocal.time - suppressorStartTime > suppressorDuration && suppressorActive) {
+		Event_EnableTarget();
+		suppressorActive = false;
 	}
 }
 
@@ -9192,6 +9207,8 @@ void idPlayer::AdjustSpeed( void ) {
 	SenseClear();
 
 	DeactivateDiazepam();
+
+	DeactivateSuppressor();
 
 	SuperSpeedWarning();
 	InvisibilityWarning();

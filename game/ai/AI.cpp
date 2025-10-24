@@ -3074,11 +3074,17 @@ idAI::HeardSound
 idEntity *idAI::HeardSound( int ignore_team ){
 	// check if we heard any sounds in the last frame
 	idActor	*actor = gameLocal.GetAlertActor();
+	idPlayer* player = gameLocal.GetLocalPlayer();
 	if ( actor && ( !ignore_team || ( ReactionTo( actor ) & ATTACK_ON_SIGHT ) ) && gameLocal.InPlayerPVS( this ) ) 	{
+		if (CanSee(player, false)) {
+			player->isHidden = false;
+		}
+		else {
+			player->isHidden = true;
+		}
 		idVec3 pos = actor->GetPhysics()->GetOrigin();
 		idVec3 org = physicsObj.GetOrigin();
 		float dist = ( pos - org ).LengthSqr();
-		
 		if ( dist < Square( combat.earRange ) ) {
 			//really close?
 			if ( dist < Square( combat.earRange/4.0f ) ) {		
@@ -4205,9 +4211,8 @@ idEntity *idAI::FindEnemy ( bool inFov, bool forceNearest, float maxDistSqr ){
 		// awareRange on creatures to simulate them looking behind them, or noticing someone standing around for too long.
 		// Modders take note, this will prevent most "sneaking up on bad guys" action because they will likely spike their aware ranges out
 		// during the sneaking.
-		if( gameLocal.random.RandomFloat() < 0.005f )	{
-			awareRangeSqr *= 1;
-		}
+		
+		awareRangeSqr *= 0.2f;
 
 		// fov doesn't matter if they're within awareRange, we "sense" them if we're alert... (or should LOS not even matter at this point?)
 		if ( distSqr < awareRangeSqr || CanSeeFrom ( origin, actor, (inFov && !(combat.fl.aware&&distSqr<awareRangeSqr)) ) ) {

@@ -246,6 +246,9 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 				Attack ( false, 1, spread * (player->diazepamModifier), 0, 1.0f );
 				Attack(false, 1, spread * (player->diazepamModifier), 0, 1.0f);
 				Attack(false, 1, spread * (player->diazepamModifier), 0, 1.0f);
+				if (player->famasSuppressor) {
+					player->ActivateSuppressor();
+				}
 			}
 			else {
 				nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier(PMOD_FIRERATE));
